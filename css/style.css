@@ -1,0 +1,205 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   FIS-LUXE // Custom Luxury Footwear Aesthetic & Cyber Styling
+   ========================================================================== */
+
+:root {
+  --color-gold-glow: rgba(243, 199, 77, 0.35);
+  --color-gold-bright: #f3c74d;
+  --color-gold-deep: #b3831b;
+  --color-dark-obsidian: #07080b;
+  --color-dark-card: rgba(14, 16, 23, 0.7);
+}
+
+/* Custom Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-dark-obsidian);
+  color: #f3f4f6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at 50% 20%, #111420 0%, #07080b 65%, #030406 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Luxury Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #08090d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2b2e3c;
+  border-radius: 9999px;
+  border: 1px solid rgba(243, 199, 77, 0.15);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f3c74d;
+  box-shadow: 0 0 10px rgba(243, 199, 77, 0.5);
+}
+
+/* 3D Canvas Fixed Background Layer */
+#webgl-canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  pointer-events: auto;
+  cursor: grab;
+}
+
+#webgl-canvas-container:active {
+  cursor: grabbing;
+}
+
+#webgl-canvas-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* 3D Hotspot Overlay Layer */
+#hotspots-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Gold Gradient Shimmer Text */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #fff7dc 0%, #f3c74d 45%, #b3831b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gold-subtle {
+  background: linear-gradient(135deg, #fceec2 0%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Cyber Luxury Glassmorphism */
+.glass-panel {
+  background: rgba(12, 14, 21, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-gold {
+  background: rgba(18, 16, 12, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(243, 199, 77, 0.25);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px -5px rgba(243, 199, 77, 0.15);
+}
+
+/* Luxury Button Styling */
+.btn-luxury-gold {
+  position: relative;
+  background: linear-gradient(135deg, #f5d47a 0%, #e6b422 50%, #c49413 100%);
+  color: #08090d;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  border-radius: 9999px;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 25px rgba(230, 180, 34, 0.35);
+}
+
+.btn-luxury-gold::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: 0.6s ease;
+}
+
+.btn-luxury-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 35px rgba(230, 180, 34, 0.55);
+}
+
+.btn-luxury-gold:hover::before {
+  left: 100%;
+}
+
+.btn-luxury-gold:active {
+  transform: translateY(0);
+}
+
+/* Glass Outline Luxury Button */
+.btn-luxury-outline {
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  color: #f3f4f6;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+}
+
+.btn-luxury-outline:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(243, 199, 77, 0.5);
+  color: #f3c74d;
+  box-shadow: 0 0 20px rgba(243, 199, 77, 0.2);
+}
+
+/* Section Reveal Fade In Animation */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Floating Audio Pulse Keyframe */
+@keyframes audioWave {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
+
+.audio-bar-1 { animation: audioWave 1.1s ease-in-out infinite; }
+.audio-bar-2 { animation: audioWave 0.8s ease-in-out infinite 0.2s; }
+.audio-bar-3 { animation: audioWave 1.3s ease-in-out infinite 0.4s; }
+
+/* Subtle Grid Background Pattern */
+.bg-grid-cyber {
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* Glowing Border Accent */
+.border-gold-glow {
+  border-color: rgba(243, 199, 77, 0.4);
+  box-shadow: 0 0 15px rgba(243, 199, 77, 0.2);
+}

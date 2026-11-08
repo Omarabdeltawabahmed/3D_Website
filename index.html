@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>FIS-LUXE // AERO-1 TITANIUM — The Pinnacle of Luxury Performance Footwear</title>
+  <meta name="description" content="Experience the FIS-LUXE AERO-1 Titanium. Bespoke luxury cyber-footwear with real-time 3D interactive customizer, exploded view, and kinetic air dampening." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#07080b',
+            gold: {
+              300: '#fde68a',
+              400: '#f3c74d',
+              500: '#e6b422',
+              600: '#b3831b',
+            },
+            cyan: {
+              400: '#22d3ee',
+              500: '#00f0ff',
+            }
+          },
+          fontFamily: {
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- External Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="bg-obsidian text-neutral-100 selection:bg-amber-400 selection:text-black">
+
+  <!-- Top Scroll Progress Indicator -->
+  <div class="fixed top-0 left-0 right-0 h-[2px] bg-white/5 z-50">
+    <div id="scroll-progress-bar" class="h-full w-0 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 shadow-[0_0_10px_#f3c74d] transition-all duration-75"></div>
+  </div>
+
+  <!-- Floating Glassmorphic Navigation Bar -->
+  <header class="fixed top-4 left-0 right-0 z-40 px-4 sm:px-8 max-w-7xl mx-auto pointer-events-none">
+    <nav class="pointer-events-auto flex items-center justify-between px-5 py-3 rounded-full glass-panel shadow-2xl transition-all duration-300">
+      
+      <!-- Brand Logo & Badge -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 via-amber-500 to-amber-700 flex items-center justify-center shadow-[0_0_15px_rgba(230,180,34,0.4)] group-hover:scale-105 transition-transform duration-300">
+          <svg class="w-4 h-4 text-black transform group-hover:rotate-45 transition-transform duration-500" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 12l10 10 10-10L12 2zm0 4.8L17.2 12 12 17.2 6.8 12 12 6.8z"/>
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-black tracking-widest text-white uppercase group-hover:text-amber-400 transition-colors">FIS-LUXE</span>
+            <span class="text-[9px] font-mono tracking-wider px-1.5 py-0.5 rounded bg-amber-400/10 border border-amber-400/30 text-amber-300 hidden sm:inline-block">ATELIER 01</span>
+          </div>
+          <span class="text-[9px] text-neutral-400 font-mono tracking-wider">AERO-1 TITANIUM</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <div class="hidden md:flex items-center gap-8 text-xs font-semibold tracking-wider uppercase text-neutral-300">
+        <a href="#hero" class="hover:text-amber-400 transition-colors">Overview</a>
+        <a href="#architecture" class="hover:text-amber-400 transition-colors">Architecture</a>
+        <a href="#materials" class="hover:text-amber-400 transition-colors">Materials</a>
+        <a href="#customizer" class="hover:text-amber-400 transition-colors flex items-center gap-1.5">
+          <span>3D Studio</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+        </a>
+        <a href="#preorder" class="hover:text-amber-400 transition-colors">Vault</a>
+      </div>
+
+      <!-- Action Utilities (Audio, Cart, Pre-Order) -->
+      <div class="flex items-center gap-3">
+        
+        <!-- Audio Synthesizer Toggle -->
+        <button id="btn-sound-toggle" title="Toggle Luxury Sound Effects" class="p-2 rounded-full bg-white/5 border border-white/10 hover:border-amber-400/50 hover:bg-white/10 transition-all text-neutral-300 hover:text-amber-300 flex items-center gap-1.5 px-3">
+          <svg id="sound-icon" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/>
+          </svg>
+          <span id="sound-label" class="text-[10px] font-mono hidden sm:inline-block">AUDIO ON</span>
+        </button>
+
+        <!-- Atelier Bag Cart Toggle -->
+        <button id="btn-cart-toggle" title="Open Atelier Bag" class="relative p-2 rounded-full bg-white/5 border border-white/10 hover:border-amber-400/50 hover:bg-white/10 transition-all text-neutral-300 hover:text-amber-300">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+          </svg>
+          <span id="cart-count-badge" class="hidden absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-400 text-black text-[9px] font-black flex items-center justify-center">0</span>
+        </button>
+
+        <!-- Pre-Order Direct CTA -->
+        <button class="btn-open-preorder hidden sm:flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-full btn-luxury-gold">
+          <span>Pre-Order</span>
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </button>
+      </div>
+
+    </nav>
+  </header>
+
+  <!-- Fullscreen Fixed WebGL 3D Canvas Background -->
+  <div id="webgl-canvas-container"></div>
+
+  <!-- Screen-Space 3D Hotspots Overlay -->
+  <div id="hotspots-container"></div>
+
+  <!-- MAIN SCROLL CONTENT SECTIONS -->
+  <main class="relative z-20 pointer-events-none">
+
+    <!-- ====================================================================
+         SECTION 1: HERO SHOWCASE (Step 0)
+         ==================================================================== -->
+    <section id="hero" data-scene-step="0" class="min-h-screen flex flex-col justify-between px-6 sm:px-12 pt-28 pb-12 max-w-7xl mx-auto">
+      
+      <!-- Top Badges & Edition Ticker -->
+      <div class="pointer-events-auto max-w-xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-mono tracking-wider mb-4">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+          <span>ATELIER NUMBERED ALLOCATION: 042 / 500</span>
+        </div>
+        <h1 class="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05] uppercase mb-4">
+          <span class="block text-white">FIS-LUXE</span>
+          <span class="text-gold-gradient block">AERO-1 TITANIUM</span>
+        </h1>
+        <p class="text-sm sm:text-base text-neutral-400 max-w-md leading-relaxed font-light">
+          An unprecedented fusion of haute horlogerie finishing, Toray T1000 carbon composite architecture, and dual-chamber kinetic air propulsion.
+        </p>
+      </div>
+
+      <!-- Hero Bottom Action HUD -->
+      <div class="pointer-events-auto flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 pt-12">
+        
+        <!-- Live Colorway & Telemetry Info -->
+        <div class="glass-panel p-4 rounded-2xl border border-white/10 max-w-sm w-full">
+          <div class="flex items-center justify-between text-xs font-mono text-neutral-400 mb-2">
+            <span>SELECTED COLORWAY</span>
+            <span class="text-amber-400 font-bold">$1,450 USD</span>
+          </div>
+          <div class="text-base font-bold text-white current-colorway-name">Onyx & 24K Gold</div>
+          <p class="text-[11px] text-neutral-400 mt-1">24K electroplated aerodynamic stabilizer with aerospace woven upper.</p>
+
+          <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-neutral-400">
+            <span>DRAG TO ROTATE 360°</span>
+            <span class="text-amber-400 animate-pulse">SCROLL TO EXPLORE ↓</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+          <a href="#customizer" class="btn-luxury-outline px-6 py-3.5 text-xs font-bold tracking-wider uppercase text-center flex items-center justify-center gap-2">
+            <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+            </svg>
+            <span>Launch 3D Studio</span>
+          </a>
+          <button class="btn-open-preorder btn-luxury-gold px-8 py-3.5 text-xs font-black tracking-wider uppercase flex items-center justify-center gap-2">
+            <span>Reserve Atelier Pair</span>
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ====================================================================
+         SECTION 2: INTERNAL ARCHITECTURE (Step 1)
+         ==================================================================== -->
+    <section id="architecture" data-scene-step="1" class="min-h-screen flex items-center px-6 sm:px-12 py-24 max-w-7xl mx-auto">
+      
+      <div class="pointer-events-auto max-w-lg glass-panel-gold p-8 sm:p-10 rounded-3xl reveal-on-scroll">
+        <div class="text-xs font-mono tracking-widest text-amber-400 uppercase mb-2 flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+          <span>01 // PNEUMATIC ARCHITECTURE</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-black text-white leading-tight mb-4 uppercase">
+          Vortex-Air Dual-Chamber Dampening
+        </h2>
+        <p class="text-neutral-300 text-sm leading-relaxed mb-6 font-light">
+          Engineered inside an ultra-transparent thermoplastic polyurethane shell, our dual-cavity nitrogen unit houses micro-spring dampeners that instantaneously absorb ground strikes and propel motion with 94.2% energy return.
+        </p>
+
+        <!-- Technical Metrics Grid -->
+        <div class="grid grid-cols-2 gap-3 mb-6">
+          <div class="p-3 rounded-xl bg-white/[0.04] border border-white/10">
+            <div class="text-[10px] font-mono text-neutral-400">REBOUND EFFICIENCY</div>
+            <div class="text-xl font-black text-amber-400">94.2%</div>
+            <div class="text-[10px] text-neutral-500">Kinetic restitution</div>
+          </div>
+          <div class="p-3 rounded-xl bg-white/[0.04] border border-white/10">
+            <div class="text-[10px] font-mono text-neutral-400">NITROGEN PSI</div>
+            <div class="text-xl font-black text-amber-400">28.4 PSI</div>
+            <div class="text-[10px] text-neutral-500">Hermetically sealed</div>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-amber-400/10 border border-amber-400/30 flex items-center gap-3">
+          <div class="w-7 h-7 rounded-full bg-amber-400/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-3.5 h-3.5 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/>
+            </svg>
+          </div>
+          <p class="text-xs text-amber-200/90 font-mono">
+            Interactive Hotspots: Hover and click the glowing indicators directly in 3D space to inspect individual engineering modules.
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ====================================================================
+         SECTION 3: MATERIALS & SPECIFICATIONS (Step 2)
+         ==================================================================== -->
+    <section id="materials" data-scene-step="2" class="min-h-screen flex items-center justify-end px-6 sm:px-12 py-24 max-w-7xl mx-auto">
+      
+      <div class="pointer-events-auto max-w-xl glass-panel p-8 sm:p-10 rounded-3xl border border-white/10 reveal-on-scroll">
+        <div class="text-xs font-mono tracking-widest text-amber-400 uppercase mb-2 flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+          <span>02 // MOLECULAR MATRIX</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-black text-white leading-tight mb-4 uppercase">
+          Aerospace Grade Craftsmanship
+        </h2>
+        <p class="text-neutral-300 text-sm leading-relaxed mb-6 font-light">
+          Each AERO-1 incorporates autoclave-cured Toray T1000 carbon fiber along the torsion bridge, 24K electroplated mirror finishes, and continuous titanium-infused micro-filament weave.
+        </p>
+
+        <!-- Interactive Material Inspector Tabs -->
+        <div class="mb-6">
+          <div class="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2">Live Material Isolation Tool:</div>
+          <div class="flex flex-wrap gap-2">
+            <button data-material-inspect="all" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-400 text-black">All Materials</button>
+            <button data-material-inspect="upper" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white/5 text-neutral-300 hover:bg-white/10">AeroKnit Upper</button>
+            <button data-material-inspect="metallic" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white/5 text-neutral-300 hover:bg-white/10">24K Gold Aerofin</button>
+            <button data-material-inspect="carbon" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white/5 text-neutral-300 hover:bg-white/10">Carbon Shank</button>
+            <button data-material-inspect="cushionGlass" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white/5 text-neutral-300 hover:bg-white/10">Pneumatic Cell</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Specs Grid Container -->
+        <div id="specs-matrix-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <!-- Populated dynamically via config.js -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ====================================================================
+         SECTION 4: 3D ATELIER / INTERACTIVE CUSTOMIZER (Step 3)
+         ==================================================================== -->
+    <section id="customizer" data-scene-step="3" class="min-h-screen flex flex-col justify-between px-6 sm:px-12 py-24 max-w-7xl mx-auto">
+      
+      <!-- Studio Header -->
+      <div class="pointer-events-auto max-w-xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-mono tracking-wider mb-3">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span id="studio-active-badge">REAL-TIME 3D ATELIER STUDIO ACTIVE</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-black text-white leading-tight uppercase">
+          Configure Your Silhouette
+        </h2>
+        <p class="text-neutral-400 text-xs sm:text-sm font-light mt-2 max-w-md">
+          Switch bespoke colorways, disassemble layers into 3D exploded engineering view, or activate X-Ray blueprint wireframe mode.
+        </p>
+      </div>
+
+      <!-- Studio Floating Control Dock -->
+      <div class="pointer-events-auto grid grid-cols-1 md:grid-cols-12 gap-6 pt-8">
+        
+        <!-- Left: Colorway Switcher Panel -->
+        <div class="md:col-span-5 glass-panel p-5 rounded-3xl border border-white/10 shadow-2xl">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-mono uppercase tracking-wider text-neutral-400">Atelier Colorways</span>
+            <span class="text-[10px] font-mono text-amber-400">4 Bespoke Finishes</span>
+          </div>
+          
+          <!-- Swatches Grid (Populated via JS) -->
+          <div id="colorway-swatches" class="flex flex-col gap-2.5"></div>
+        </div>
+
+        <!-- Right: 3D Camera & Layer Tools Dock -->
+        <div class="md:col-span-7 flex flex-col justify-end">
+          <div class="glass-panel p-5 rounded-3xl border border-white/10 shadow-2xl flex flex-col gap-4">
+            
+            <div class="text-xs font-mono uppercase tracking-wider text-neutral-400">Atelier Viewport Controls</div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              
+              <!-- Explode View Button -->
+              <button id="btn-explode" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-amber-400/60 hover:bg-white/[0.08] transition-all text-neutral-200 group">
+                <svg class="w-5 h-5 text-amber-400 mb-1.5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                </svg>
+                <span class="btn-label text-[10px] font-bold tracking-wider text-center">Exploded View</span>
+              </button>
+
+              <!-- Wireframe Button -->
+              <button id="btn-wireframe" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-amber-400/60 hover:bg-white/[0.08] transition-all text-neutral-200 group">
+                <svg class="w-5 h-5 text-amber-400 mb-1.5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                </svg>
+                <span class="btn-label text-[10px] font-bold tracking-wider text-center">X-Ray Wireframe</span>
+              </button>
+
+              <!-- Auto-Spin Toggle -->
+              <button id="btn-autospin" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-amber-400/60 hover:bg-white/[0.08] transition-all text-neutral-200 group">
+                <svg class="w-5 h-5 text-amber-400 mb-1.5 group-hover:rotate-180 transition-transform duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                <span class="text-[10px] font-bold tracking-wider text-center">360° Auto-Spin</span>
+              </button>
+
+              <!-- Reset View -->
+              <button id="btn-reset-view" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-amber-400/60 hover:bg-white/[0.08] transition-all text-neutral-200 group">
+                <svg class="w-5 h-5 text-amber-400 mb-1.5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+                </svg>
+                <span class="text-[10px] font-bold tracking-wider text-center">Reset Angle</span>
+              </button>
+
+            </div>
+
+            <div class="text-[10px] font-mono text-neutral-400 flex items-center justify-between border-t border-white/10 pt-3">
+              <span>MOUSE DRAG: SPIN SILHOUETTE</span>
+              <span>SCROLL WHEEL: ZOOM CAMERA</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ====================================================================
+         SECTION 5: BESPOKE FIT & PRE-ORDER VAULT (Step 4)
+         ==================================================================== -->
+    <section id="preorder" data-scene-step="4" class="min-h-screen flex items-center px-6 sm:px-12 py-24 max-w-7xl mx-auto">
+      
+      <div class="pointer-events-auto max-w-xl glass-panel-gold p-8 sm:p-10 rounded-3xl reveal-on-scroll">
+        
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-mono tracking-widest text-amber-400 uppercase">03 // ATELIER VAULT ALLOCATION</span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/40">500 PAIRS WORLDWIDE</span>
+        </div>
+
+        <h2 class="text-3xl sm:text-5xl font-black text-white uppercase leading-none mb-2">
+          Reserve Your Pair
+        </h2>
+
+        <div class="flex items-baseline gap-3 mb-6">
+          <span class="text-3xl font-black text-gold-gradient">$1,450</span>
+          <span class="text-xs text-neutral-400 font-mono">USD // White-Glove Insured Delivery Included</span>
+        </div>
+
+        <!-- Size Selection Grid -->
+        <div class="mb-6">
+          <div class="flex items-center justify-between text-xs font-mono text-neutral-300 mb-2.5">
+            <span>SELECT ATELIER SIZE (MENS / UNISEX):</span>
+            <span id="selected-size-display" class="text-amber-400 font-bold">US 9.5 / EU 43</span>
+          </div>
+
+          <div id="size-selector-grid" class="grid grid-cols-4 sm:grid-cols-7 gap-2">
+            <!-- Populated via config.js -->
+          </div>
+        </div>
+
+        <!-- Pre-Order Actions -->
+        <div class="flex flex-col sm:flex-row gap-3 mb-6">
+          <button id="btn-add-to-cart" class="btn-luxury-outline flex-1 py-3.5 px-4 text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2">
+            <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+            </svg>
+            <span>Add to Atelier Bag</span>
+          </button>
+
+          <button class="btn-open-preorder btn-luxury-gold flex-1 py-3.5 px-4 text-xs font-black tracking-wider uppercase flex items-center justify-center gap-2">
+            <span>Pre-Order Reservation</span>
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Trust Badges & Guarantee -->
+        <div class="grid grid-cols-3 gap-2 pt-6 border-t border-white/10 text-center">
+          <div class="p-2">
+            <div class="text-[10px] font-bold text-white mb-0.5">NFC CRYPTOGRAPHIC</div>
+            <div class="text-[9px] text-neutral-400 font-mono">Authenticity Vault Chip</div>
+          </div>
+          <div class="p-2 border-x border-white/10">
+            <div class="text-[10px] font-bold text-white mb-0.5">ATELIER CRAFTED</div>
+            <div class="text-[9px] text-neutral-400 font-mono">Hand-finished in Milan</div>
+          </div>
+          <div class="p-2">
+            <div class="text-[10px] font-bold text-white mb-0.5">COMPLIMENTARY</div>
+            <div class="text-[9px] text-neutral-400 font-mono">Insured Global Courier</div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ====================================================================
+       FOOTER
+       ==================================================================== -->
+  <footer class="relative z-30 bg-black/90 border-t border-white/10 px-6 sm:px-12 py-16">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start justify-between gap-12">
+      
+      <div class="max-w-sm">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-7 h-7 rounded-full bg-amber-400 flex items-center justify-center text-black font-black text-xs">F</div>
+          <span class="text-base font-black tracking-widest text-white uppercase">FIS-LUXE LABS</span>
+        </div>
+        <p class="text-xs text-neutral-400 leading-relaxed font-light">
+          Redefining ultra-luxury footwear through computational aerospace design, generative ergonomics, and haute horlogerie finishes.
+        </p>
+        <div class="mt-4 flex items-center gap-2 text-[10px] font-mono text-neutral-500">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>ATELIER SYSTEMS: FULLY OPERATIONAL</span>
+        </div>
+      </div>
+
+      <!-- Quick Navigation -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-8 text-xs font-mono">
+        <div>
+          <div class="text-white font-bold mb-3 tracking-widest uppercase">Collections</div>
+          <ul class="space-y-2 text-neutral-400">
+            <li><a href="#hero" class="hover:text-amber-400 transition-colors">AERO-1 Titanium</a></li>
+            <li><a href="#architecture" class="hover:text-amber-400 transition-colors">Vortex Dampeners</a></li>
+            <li><a href="#materials" class="hover:text-amber-400 transition-colors">Material Matrix</a></li>
+            <li><a href="#customizer" class="hover:text-amber-400 transition-colors">3D Customizer</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="text-white font-bold mb-3 tracking-widest uppercase">Atelier</div>
+          <ul class="space-y-2 text-neutral-400">
+            <li><a href="#" class="hover:text-amber-400 transition-colors">Bespoke Fitting</a></li>
+            <li><a href="#" class="hover:text-amber-400 transition-colors">Milan Workshop</a></li>
+            <li><a href="#" class="hover:text-amber-400 transition-colors">NFC Verification</a></li>
+            <li><a href="#" class="hover:text-amber-400 transition-colors">Private Client Concierge</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="text-white font-bold mb-3 tracking-widest uppercase">Legal</div>
+          <ul class="space-y-2 text-neutral-400">
+            <li><a href="#" class="hover:text-amber-400 transition-colors">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-amber-400 transition-colors">Terms of Atelier</a></li>
+            <li><a href="#" class="hover:text-amber-400 transition-colors">Authenticity Deed</a></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 font-mono">
+      <span>© 2026 FIS-LUXE ATELIER LABS. ALL RIGHTS RESERVED.</span>
+      <span class="mt-2 sm:mt-0">DEVELOPED WITH THREE.JS & TAILWIND CSS</span>
+    </div>
+  </footer>
+
+  <!-- ====================================================================
+       PRE-ORDER RESERVATION MODAL
+       ==================================================================== -->
+  <div id="order-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl transition-opacity duration-300 hidden opacity-0">
+    <div class="relative w-full max-w-lg glass-panel-gold p-8 rounded-3xl border border-amber-400/40 shadow-2xl overflow-hidden">
+      
+      <!-- Close Button -->
+      <button id="btn-close-modal" class="absolute top-5 right-5 text-neutral-400 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <!-- Pre-Order Reservation Form -->
+      <form id="preorder-form" class="space-y-4">
+        <div>
+          <div class="text-xs font-mono tracking-widest text-amber-400 uppercase mb-1">ATELIER RESERVATION</div>
+          <h3 class="text-2xl font-black text-white uppercase">AERO-1 TITANIUM</h3>
+        </div>
+
+        <!-- Selected Specs Capsule -->
+        <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-1.5 text-xs font-mono">
+          <div class="flex justify-between">
+            <span class="text-neutral-400">FINISH:</span>
+            <span id="modal-colorway-name" class="text-white font-bold">Onyx & 24K Gold</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-neutral-400">ALLOCATION SIZE:</span>
+            <span id="modal-selected-size" class="text-white font-bold">US 9.5 (EU 43)</span>
+          </div>
+          <div class="flex justify-between border-t border-white/10 pt-1.5">
+            <span class="text-neutral-400">TOTAL RESERVATION:</span>
+            <span id="modal-price-display" class="text-amber-400 font-bold">$1,450 USD</span>
+          </div>
+        </div>
+
+        <!-- Client Information Inputs -->
+        <div class="space-y-3 pt-2">
+          <div>
+            <label class="block text-[10px] font-mono uppercase text-neutral-400 mb-1">Client Full Name</label>
+            <input type="text" required placeholder="Lord / Lady / Citizen of Luxe" class="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400 transition-colors" />
+          </div>
+          <div>
+            <label class="block text-[10px] font-mono uppercase text-neutral-400 mb-1">VIP Email Address</label>
+            <input type="email" required placeholder="client@atelier-luxe.com" class="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400 transition-colors" />
+          </div>
+          <div>
+            <label class="block text-[10px] font-mono uppercase text-neutral-400 mb-1">Shipping Destination (Country / Region)</label>
+            <input type="text" required placeholder="e.g. Monaco, Zurich, Tokyo, New York" class="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white text-sm focus:outline-none focus:border-amber-400 transition-colors" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn-luxury-gold w-full py-4 text-xs font-black tracking-wider uppercase mt-4 flex items-center justify-center gap-2">
+          <span>Authorize Atelier Reservation</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+          </svg>
+        </button>
+
+        <p class="text-[9px] text-center text-neutral-500 font-mono">
+          No charge until allocation is hand-assembled and certified by the Milan Atelier.
+        </p>
+      </form>
+
+      <!-- Confirmation Screen (Shown after submit) -->
+      <div id="preorder-success-screen" class="hidden text-center py-8 space-y-4">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-200 text-black flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(230,180,34,0.6)]">
+          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <h4 class="text-2xl font-black text-white uppercase">Reservation Authorized</h4>
+        <p class="text-xs text-neutral-300 max-w-sm mx-auto leading-relaxed">
+          Your numbered allocation has been secured. Our private client director will reach out within 2 hours with your encrypted certificate of authenticity.
+        </p>
+        <div class="p-3 rounded-xl bg-amber-400/10 border border-amber-400/30 font-mono text-xs text-amber-300">
+          ALLOCATION ID: #FIS-AERO-042-2026
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       ATELIER BAG SLIDE-OUT DRAWER
+       ==================================================================== -->
+  <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-black/95 backdrop-blur-2xl border-l border-white/10 z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between p-6 shadow-2xl">
+    <div>
+      <div class="flex items-center justify-between pb-6 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-black tracking-widest text-white uppercase">Atelier Bag</span>
+          <span class="text-[10px] font-mono text-amber-400">RESERVATIONS</span>
+        </div>
+        <button id="btn-close-cart" class="text-neutral-400 hover:text-white p-1 rounded-lg">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Cart Items List Container -->
+      <div id="cart-items-list" class="py-6 space-y-3 overflow-y-auto max-h-[60vh]">
+        <div class="text-neutral-500 text-center py-12 text-sm font-mono">Your Atelier Bag is currently empty.</div>
+      </div>
+    </div>
+
+    <!-- Cart Footer & Checkout -->
+    <div class="pt-6 border-t border-white/10 space-y-4">
+      <div class="flex items-center justify-between font-mono text-sm">
+        <span class="text-neutral-400">SUBTOTAL</span>
+        <span id="cart-total-amount" class="text-lg font-black text-amber-400">$0 USD</span>
+      </div>
+      <button class="btn-open-preorder btn-luxury-gold w-full py-4 text-xs font-black tracking-wider uppercase flex items-center justify-center gap-2">
+        <span>Proceed to Atelier Reservation</span>
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main ES Module Application Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

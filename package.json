@@ -1,0 +1,23 @@
+{
+  "name": "fis-luxe-aero-1",
+  "version": "1.0.0",
+  "description": "FIS-LUXE AERO-1 // Modern 3D Interactive Luxury Footwear Showcase Landing Page",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "threejs",
+    "webgl",
+    "luxury",
+    "ecommerce",
+    "footwear",
+    "tailwindcss",
+    "gsap",
+    "3d-interactive",
+    "landing-page"
+  ],
+  "author": "Antigravity // FIS-LUXE Atelier",
+  "license": "MIT"
+}
